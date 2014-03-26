@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>au.org.ala</groupId>
 	<artifactId>ala-logger</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>ala-logger</name>
 	<description>
@@ -20,7 +20,7 @@
 	</organization>
     <!-- AN SCM entry that points to the SVN directory that contains the pom file for the project  -->
     <scm>
-        <developerConnection>scm:svn:https://ala-bie.googlecode.com/svn/tags/ala-logger-1.0</developerConnection>
+        <developerConnection>scm:svn:https://ala-bie.googlecode.com/svn/trunk/ala-logger/</developerConnection>
     </scm>		
     <dependencies>
 		<dependency>
