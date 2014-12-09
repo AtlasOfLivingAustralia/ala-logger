@@ -16,15 +16,20 @@
 package org.ala.client.appender;
 
 import org.ala.client.model.LogEventVO;
+import org.ala.client.util.Constants;
 import org.ala.client.util.RestfulClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Log4J appender for JSON based REST Web Service.
@@ -99,9 +104,9 @@ public class RestfulAppender extends AppenderSkeleton {
 		int statusCode = 0;
 		String message = null;
 		LogEventVO vo = null;
-		
-        try {
-        	Object object = event.getMessage();
+
+		try {
+			Object object = event.getMessage();
         	if(object instanceof LogEventVO){       		
         		//convert to JSON
         		message = serMapper.writeValueAsString(object); 
@@ -120,7 +125,8 @@ public class RestfulAppender extends AppenderSkeleton {
         	if(restfulClient == null){
         		restfulClient = new RestfulClient(timeout);
         	}
-        	Object[] array = restfulClient.restPost(urlTemplate, message);
+
+        	Object[] array = restfulClient.restPost(urlTemplate, message, constructHttpHeaders(event));
         	if(array != null && array.length > 0){
         		statusCode = (Integer)array[0];
         	}
@@ -135,7 +141,21 @@ public class RestfulAppender extends AppenderSkeleton {
         	}
         }
         return statusCode;
-	}	
+	}
+
+	private Map<String, String> constructHttpHeaders(LoggingEvent event) {
+		Map<String, String> headers = new HashMap<String, String>();
+
+		if (event != null) {
+			String userAgent = (String) event.getMDC(Constants.USER_AGENT_PARAM);
+			if (StringUtils.isBlank(userAgent)) {
+				userAgent = Constants.UNDEFINED_USER_AGENT_VALUE;
+			}
+			headers.put(Constants.USER_AGENT_PARAM, userAgent);
+		}
+
+		return headers;
+	}
 
 	public void close() {
 		restfulClient = null;

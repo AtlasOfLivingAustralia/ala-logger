@@ -16,18 +16,13 @@
 package org.ala.client.util;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.MDC;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -69,11 +64,14 @@ public class RestfulClient {
      * @param url             URL Endpoint
      * @param mimeType        return mimeType
      * @param jsonRequestBody JSON Object to post to URL
+     * @param headers         Name/Value pairs of HTTP Request Headers to be set on the request
      * @return [0]: status code; [1]: a JSON encoded response
      * @throws IOException
      * @throws HttpException
      */
-    public Object[] restPost(String url, String contentType, String jsonRequestBody) throws HttpException, IOException {
+    public Object[] restPost(String url, String contentType, String jsonRequestBody, Map<String, String> headers)
+            throws HttpException,
+            IOException {
         PostMethod post = null;
         String resp = null;
         int statusCode = 0;
@@ -81,11 +79,9 @@ public class RestfulClient {
         try {
             post = new PostMethod(url);
 
-            String userAgent = (String) MDC.get(Constants.USER_AGENT_PARAM);
-            if (StringUtils.isBlank(userAgent)) {
-                userAgent = Constants.UNDEFINED_USER_AGENT_VALUE;
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                post.setRequestHeader(new Header(entry.getKey(), entry.getValue()));
             }
-            post.setRequestHeader(new Header(Constants.USER_AGENT_PARAM, userAgent));
 
             RequestEntity entity = new StringRequestEntity(jsonRequestBody, contentType, ENCODE_TYPE);
             post.setRequestEntity(entity);
@@ -109,11 +105,12 @@ public class RestfulClient {
      * @param url             URL Endpoint
      * @param jsonRequestBody JSON Object to post to URL
      * @return [0]: status code; [1]: a JSON encoded response
+     * @param headers         Name/Value pairs of HTTP Request Headers to be set on the request
      * @throws IOException
      * @throws HttpException
      */
-    public Object[] restPost(String url, String jsonRequestBody) throws HttpException, IOException {
-        return this.restPost(url, JSON_MIME_TYPE, jsonRequestBody);
+    public Object[] restPost(String url, String jsonRequestBody, Map<String, String> headers) throws HttpException, IOException {
+        return this.restPost(url, JSON_MIME_TYPE, jsonRequestBody, headers);
     }
 
     /**
@@ -121,12 +118,13 @@ public class RestfulClient {
      *
      * @param url             URL Endpoint
      * @param jsonRequestBody JSON Object to post to URL
+     * @param headers         Name/Value pairs of HTTP Request Headers to be set on the request
      * @return [0]: status code; [1]: a JSON encoded response
      * @throws IOException
      * @throws HttpException
      */
-    public Object[] restPost(String url, String mimeType, Collection object) throws HttpException, IOException {
-        return this.restPost(url, mimeType, serMapper.writeValueAsString(object.toArray()));
+    public Object[] restPost(String url, String mimeType, Collection object, Map<String, String> headers) throws HttpException, IOException {
+        return this.restPost(url, mimeType, serMapper.writeValueAsString(object.toArray()), headers);
     }
 
     /**
