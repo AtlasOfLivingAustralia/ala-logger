@@ -1,88 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-        <parent>
-            <groupId>au.org.ala</groupId>
-            <artifactId>ala-parent-pom</artifactId>
-            <version>1.0</version>
-        </parent>
+    <parent>
+        <groupId>au.org.ala</groupId>
+        <artifactId>ala-parent-pom</artifactId>
+        <version>1.0</version>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>au.org.ala</groupId>
-	<artifactId>ala-logger</artifactId>
-	<version>1.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>ala-logger</name>
-	<description>
-		This is Log4J appender to consume JSON based web service (ALA_LOGGER). 
-	</description>
-    
-	<properties>
-		<spring.version>3.1.0.RELEASE</spring.version>
-	</properties>	
-		
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>au.org.ala</groupId>
+    <artifactId>ala-logger</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>ala-logger</name>
+    <description>
+        This is Log4J appender to consume JSON based web service (ALA_LOGGER).
+    </description>
+
+    <properties>
+        <spring.version>3.1.0.RELEASE</spring.version>
+    </properties>
+
     <organization>
-		<name>ALA</name>
-		<url>http://www.ala.org</url>
-	</organization>
+        <name>ALA</name>
+        <url>http://www.ala.org</url>
+    </organization>
     <!-- AN SCM entry that points to the SVN directory that contains the pom file for the project  -->
     <scm>
         <developerConnection>scm:svn:https://ala-bie.googlecode.com/svn/trunk/ala-logger/</developerConnection>
-    </scm>		
+    </scm>
     <dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<scope>test</scope>
-		</dependency>		
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
         <!-- LOG4J -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-		   <groupId>commons-lang</groupId>
-		   <artifactId>commons-lang</artifactId>
-		   <version>2.4</version>
-		</dependency>		
-		<!-- Jackson -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>1.8.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.8.5</version>
-		</dependency>        
-	</dependencies>
-		
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <!-- Jackson -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.8.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.8.5</version>
+        </dependency>
+        <!-- testing dependencies -->
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
-	    <plugins>
-	        <plugin>
-	            <artifactId>maven-compiler-plugin</artifactId>
-	            <configuration>
-	                <source>1.5</source>
-	                <target>1.5</target>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
                     <encoding>UTF-8</encoding>
-	            </configuration>
-	        </plugin>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5</version>
             </plugin>
 
-	    </plugins>
-	</build>
+        </plugins>
+    </build>
 
 </project>
 
