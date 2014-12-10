@@ -28,8 +28,19 @@
     </organization>
     <!-- AN SCM entry that points to the SVN directory that contains the pom file for the project  -->
     <scm>
-        <developerConnection>scm:svn:https://ala-bie.googlecode.com/svn/trunk/ala-logger/</developerConnection>
-    </scm>
+        <connection>scm:git:git@github.com:AtlasOfLivingAustralia/ala-logger.git</connection>
+        <url>https://github.com/AtlasOfLivingAustralia/ala-logger</url>
+        <developerConnection>scm:git:git@github.com:AtlasOfLivingAustralia/ala-logger.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>    
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/AtlasOfLivingAustralia/ala-logger/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Travis</system>
+        <url>http://travis-ci.org/AtlasOfLivingAustralia/ala-logger/</url>
+    </ciManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -65,7 +76,6 @@
             <version>1.8.5</version>
         </dependency>
         <!-- testing dependencies -->
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
