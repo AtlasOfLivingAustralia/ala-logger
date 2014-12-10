@@ -28,8 +28,13 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Log4J appender for JSON based REST Web Service.
@@ -38,8 +43,10 @@ import java.util.Map;
  *
  */
 public class RestfulAppender extends AppenderSkeleton {
-	
-	private String urlTemplate;
+
+    public static final String LOGGER_CLIENT_PROPERTIES = "/data/logger-client/config/logger-client.properties";
+    public static final String LOGGER_URL_PROPERTY = "logger_url";
+    private String urlTemplate;
 	private String username;
 	private String password;
 	private int timeout;
@@ -56,7 +63,43 @@ public class RestfulAppender extends AppenderSkeleton {
         serMapper.getSerializationConfig().setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         deserMapper = new ObjectMapper();
         deserMapper.getDeserializationConfig().set(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        loadLoggerClientProperties();
 	}
+
+    private void loadLoggerClientProperties() {
+        FileInputStream stream = null;
+        try {
+            Properties props = new Properties();
+            File propsFile = new File(LOGGER_CLIENT_PROPERTIES);
+            if (propsFile.exists()) {
+                stream = new FileInputStream(propsFile);
+                props.load(stream);
+                if (!StringUtils.isBlank(props.getProperty(LOGGER_URL_PROPERTY))) {
+                    urlTemplate = props.getProperty(LOGGER_URL_PROPERTY);
+                    LogLog.debug("Log events will be written to [" + urlTemplate + "]");
+                }
+            }
+            else {
+                LogLog.warn("Cannot find logger client properties file " + LOGGER_CLIENT_PROPERTIES + ". Logger " +
+                        "Service URL will be taken from the log4j.xml config file for the host application.");
+            }
+        }
+        catch (Exception e) {
+            LogLog.warn("Failed to load logger client properties file: " + e.getMessage() + ". Logger " +
+                    "Service URL will be taken from the log4j.xml config file for the host application.");
+            // not much else can be done here - the urlTemplate will be left blank, so any value provided in the
+            // log4j.xml file will be used instead of the environment specific configuration property
+        }
+        finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 	
 	public int getTimeout() {
 		return timeout;
@@ -67,7 +110,10 @@ public class RestfulAppender extends AppenderSkeleton {
 	}
 	
 	public void setUrlTemplate(String urlTemplate) {
-		this.urlTemplate = urlTemplate;
+        // only set the urlTemplate if it has not already been defined - see loadLoggerClientProperties()
+        if (StringUtils.isBlank(this.urlTemplate)) {
+            this.urlTemplate = urlTemplate;
+        }
 	}
 	
 	public void setUsername(String username) {
@@ -126,6 +172,7 @@ public class RestfulAppender extends AppenderSkeleton {
         		restfulClient = new RestfulClient(timeout);
         	}
 
+            LogLog.debug("Posting log event to URL [" + urlTemplate + "]");
         	Object[] array = restfulClient.restPost(urlTemplate, message, constructHttpHeaders(event));
         	if(array != null && array.length > 0){
         		statusCode = (Integer)array[0];
