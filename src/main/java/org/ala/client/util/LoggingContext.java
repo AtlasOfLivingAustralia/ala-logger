@@ -9,7 +9,12 @@ public class LoggingContext {
     }
 
     public static void setProperty(String propertyName, String value) {
-        MDC.put(propertyName, value);
+        // MDC throws a NullPointerException if you attempt to set a null property value (uses Hashtable under the hood)
+        if (value == null) {
+            MDC.remove(propertyName);
+        } else {
+            MDC.put(propertyName, value);
+        }
     }
 
     public static void clearContext() {
