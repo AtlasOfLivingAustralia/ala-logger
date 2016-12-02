@@ -16,8 +16,9 @@
 package org.ala.client.model;
 
 import java.io.Serializable;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -30,7 +31,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  */
 
 public class LogEventVO implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private String comment = "";
 
@@ -38,7 +39,7 @@ public class LogEventVO implements Serializable {
 
     private String userIP = "";
     
-    private Map<String, Integer> recordCounts = new Hashtable<String, Integer>();
+    private ConcurrentMap<String, AtomicInteger> recordCounts = new ConcurrentHashMap<>();
 
     private String userEmail = "";
     
@@ -54,19 +55,19 @@ public class LogEventVO implements Serializable {
     public LogEventVO() {
     }
 
-    public LogEventVO(LogEventType eventType, String userEmail, String comment, String userIP, Map<String, Integer> recordCounts) {
+    public LogEventVO(LogEventType eventType, String userEmail, String comment, String userIP, ConcurrentMap<String, AtomicInteger> recordCounts) {
         this(eventType.getId(), null, null, userEmail, comment, userIP, null, recordCounts);
     }
     
-    public LogEventVO(LogEventType eventType, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts) {
+    public LogEventVO(LogEventType eventType, String userEmail, String comment, String userIP, String month, ConcurrentMap<String, AtomicInteger> recordCounts) {
         this(eventType.getId(), null, null, userEmail, comment, userIP, month, recordCounts);
     }
 
-    public LogEventVO(LogEventType eventType, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, Map<String, Integer> recordCounts) {
+    public LogEventVO(LogEventType eventType, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, ConcurrentMap<String, AtomicInteger> recordCounts) {
         this(eventType.getId(), reasonTypeId, sourceTypeId, userEmail, comment, userIP, null, recordCounts);
     }
     
-    public LogEventVO(LogEventType eventType, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts) {
+    public LogEventVO(LogEventType eventType, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, ConcurrentMap<String, AtomicInteger> recordCounts) {
         this(eventType.getId(), reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, recordCounts);
     }
     /**
@@ -82,12 +83,12 @@ public class LogEventVO implements Serializable {
      * @param recordCounts
      * @param sourceUrl
      */
-    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts, String sourceUrl) {
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, ConcurrentMap<String, AtomicInteger> recordCounts, String sourceUrl) {
        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, recordCounts);
        this.sourceUrl = sourceUrl;
     }
     
-    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts) {
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, ConcurrentMap<String, AtomicInteger> recordCounts) {
         this.sourceTypeId = sourceTypeId;
         this.reasonTypeId = reasonTypeId;
         this.eventTypeId = eventTypeId;
@@ -108,7 +109,7 @@ public class LogEventVO implements Serializable {
         }       
     }
 
-    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, Map<String, Integer> recordCounts) {
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, ConcurrentMap<String, AtomicInteger> recordCounts) {
         this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, null, recordCounts);
     }
     
@@ -128,11 +129,11 @@ public class LogEventVO implements Serializable {
         this.eventTypeId = eventTypeId;
     }
     
-    public Map<String, Integer> getRecordCounts() {
+    public ConcurrentMap<String, AtomicInteger> getRecordCounts() {
         return this.recordCounts;
     }
 
-    public void setRecordCount(Map<String, Integer> recordCounts) {
+    public void setRecordCount(ConcurrentMap<String, AtomicInteger> recordCounts) {
         this.recordCounts = recordCounts;
     }
 
