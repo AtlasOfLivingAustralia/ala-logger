@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ala.client.appender.RestLevel;
 import org.ala.client.appender.RestfulAppender;
@@ -68,11 +71,11 @@ public class LogTest {
 	    	//log to remote ala-logger
 	    	logger.log(RestLevel.REMOTE, sb.toString());
 	    	        	
-	    	Map<String, Integer> recordCounts = new Hashtable<String, Integer>();
+	    	ConcurrentMap<String, AtomicInteger> recordCounts = new ConcurrentHashMap<>();
 	    	// entityUid, record_count
-	    	recordCounts.put("dp123", 32);
-	    	recordCounts.put("dr143", 22);
-	    	recordCounts.put("ins322", 55);
+	    	recordCounts.put("dp123", new AtomicInteger(32));
+	    	recordCounts.put("dr143", new AtomicInteger(22));
+	    	recordCounts.put("ins322", new AtomicInteger(55));
 	    	LogEventVO vo = new LogEventVO(LogEventType.OCCURRENCE_RECORDS_VIEWED, "waiman.mok@csiro.au", "For doing some research with", "127.0.1.1", recordCounts);
 	    	logger.log(RestLevel.REMOTE, vo);
     	}
