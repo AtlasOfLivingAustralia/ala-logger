@@ -60,7 +60,7 @@ public class LogEventVO implements Serializable {
 
     private String userIP = "";
     
-    private Map<String, Integer> recordCounts = Collections.emptyMap();
+    private Map<String, Integer> recordCounts = new HashMap<>();
 
     private String userEmail = "";
     
