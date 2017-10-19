@@ -4,6 +4,9 @@ jdk:
   - openjdk7
   - oraclejdk8
   - oraclejdk9
+matrix:
+  allow_failures:
+    - jdk: oraclejdk9
 branches:
   only:
   - master
