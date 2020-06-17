@@ -1,6 +1,7 @@
 package org.ala.client;
 
 import org.ala.client.appender.RestfulAppender;
+import org.ala.client.model.LogEventVO;
 import org.ala.client.util.Constants;
 import org.ala.client.util.RestfulClient;
 import org.apache.commons.httpclient.HttpClient;
@@ -15,6 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -79,5 +85,33 @@ public class RestfulClientTest {
         String sentValue = captor.getValue().getRequestHeader(Constants.USER_AGENT_PARAM).getValue();
         assertEquals("myUserAgent", sentValue);
     }
+
+    @Test
+    public void testUserAgentSetToValueProvidedEvent() throws Exception {
+        HttpClient mockHttpClient = mock(HttpClient.class);
+        when(mockHttpClient.getParams()).thenReturn(mock(HttpClientParams.class));
+        whenNew(HttpClient.class).withAnyArguments().thenReturn(mockHttpClient);
+
+        LogEventVO logEventVO = new LogEventVO(1, 1, 1, "userEmail", "For doing some research with..", "123.11.01.112", "myUserAgent", new HashMap<String, Integer>() {{
+            put("dp123", 32);
+            put("dr143", 22);
+            put("ins322", 55);
+        }});
+
+        RestfulAppender appender = new RestfulAppender();
+        appender.setUrlTemplate("somurl");
+        LoggingEvent event = mock(LoggingEvent.class);
+        when(event.getMessage()).thenReturn(logEventVO);
+
+//        when(event.getMDC(eq(Constants.USER_AGENT_PARAM))).thenReturn("myUserAgent");
+        appender.doAppend(event);
+
+        ArgumentCaptor<HttpMethod> captor = ArgumentCaptor.forClass(HttpMethod.class);
+        verify(mockHttpClient).executeMethod(captor.capture());
+
+        String sentValue = captor.getValue().getRequestHeader(Constants.USER_AGENT_PARAM).getValue();
+        assertEquals("myUserAgent", sentValue);
+    }
+
 
 }

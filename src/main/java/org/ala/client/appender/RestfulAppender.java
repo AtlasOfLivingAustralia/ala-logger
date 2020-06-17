@@ -194,11 +194,17 @@ public class RestfulAppender extends AppenderSkeleton {
 		Map<String, String> headers = new HashMap<String, String>();
 
 		if (event != null) {
-			String userAgent = (String) event.getMDC(Constants.USER_AGENT_PARAM);
-			if (StringUtils.isBlank(userAgent)) {
-				userAgent = Constants.UNDEFINED_USER_AGENT_VALUE;
+
+			Object message = event.getMessage();
+			if (message instanceof LogEventVO && !StringUtils.isBlank(((LogEventVO) message).getUserAgent())) {
+				headers.put(Constants.USER_AGENT_PARAM, ((LogEventVO) message).getUserAgent());
+			} else {
+				String userAgent = (String) event.getMDC(Constants.USER_AGENT_PARAM);
+				if (StringUtils.isBlank(userAgent)) {
+					userAgent = Constants.UNDEFINED_USER_AGENT_VALUE;
+				}
+				headers.put(Constants.USER_AGENT_PARAM, userAgent);
 			}
-			headers.put(Constants.USER_AGENT_PARAM, userAgent);
 		}
 
 		return headers;

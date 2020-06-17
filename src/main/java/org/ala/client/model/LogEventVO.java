@@ -59,6 +59,8 @@ public class LogEventVO implements Serializable {
     private int eventTypeId = 0;
 
     private String userIP = "";
+
+    private String userAgent = "";
     
     private Map<String, Integer> recordCounts = new HashMap<>();
 
@@ -120,7 +122,33 @@ public class LogEventVO implements Serializable {
         this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, mapToInt(recordCounts));
     }
 
-    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts) {
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, ConcurrentMap<String, AtomicInteger> recordCounts, String sourceUrl) {
+        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, mapToInt(recordCounts), sourceUrl);
+    }
+
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts, String sourceUrl) {
+        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, recordCounts);
+        this.sourceUrl = sourceUrl;
+    }
+
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String userAgent, Map<String, Integer> recordCounts) {
+        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, userAgent, null, recordCounts);
+    }
+
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String userAgent, String month, ConcurrentMap<String, AtomicInteger> recordCounts) {
+        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, userAgent, month, mapToInt(recordCounts));
+    }
+
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String userAgent, String month, ConcurrentMap<String, AtomicInteger> recordCounts, String sourceUrl) {
+        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, userAgent, month, mapToInt(recordCounts), sourceUrl);
+    }
+
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String userAgent, String month, Map<String, Integer> recordCounts, String sourceUrl) {
+        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, userAgent, month, recordCounts);
+        this.sourceUrl = sourceUrl;
+    }
+
+    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String userAgent, String month, Map<String, Integer> recordCounts) {
         this.sourceTypeId = sourceTypeId;
         this.reasonTypeId = reasonTypeId;
         this.eventTypeId = eventTypeId;
@@ -133,21 +161,16 @@ public class LogEventVO implements Serializable {
         if(userIP != null){
             this.userIP = userIP;
         }
+        if (userAgent != null) {
+            this.userAgent = userAgent;
+        }
+
         if(month != null){
             this.month = month;
         }
         if(recordCounts != null){
             this.recordCounts = recordCounts;
         }       
-    }
-
-    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, ConcurrentMap<String, AtomicInteger> recordCounts, String sourceUrl) {
-        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, mapToInt(recordCounts), sourceUrl);
-    }
-
-    public LogEventVO(int eventTypeId, Integer reasonTypeId, Integer sourceTypeId, String userEmail, String comment, String userIP, String month, Map<String, Integer> recordCounts, String sourceUrl) {
-        this(eventTypeId, reasonTypeId, sourceTypeId, userEmail, comment, userIP, month, recordCounts);
-        this.sourceUrl = sourceUrl;
     }
 
     public String getComment() {
@@ -194,7 +217,15 @@ public class LogEventVO implements Serializable {
     public void setUserIP(String userIP) {
         this.userIP = userIP;
     }
-    
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
     public String getMonth() {
         return month;
     }
