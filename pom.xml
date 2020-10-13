@@ -4,12 +4,12 @@
     <parent>
         <groupId>au.org.ala</groupId>
         <artifactId>ala-parent-pom</artifactId>
-        <version>5</version>
+        <version>14</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ala-logger</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ala-logger</name>
     <description>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
         <!-- LOG4J -->
